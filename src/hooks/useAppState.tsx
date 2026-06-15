@@ -184,9 +184,12 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   const replaceProviderGames = useCallback(
     (providerId: PlatformId, games: UserGame[]) => {
       commit((current, timestamp) => {
-        const remaining = current.games.filter((game) =>
-          game.platforms.every((platform) => platform.platform !== providerId),
-        )
+        const remaining = current.games
+          .map((game) => ({
+            ...game,
+            platforms: game.platforms.filter((platform) => platform.platform !== providerId),
+          }))
+          .filter((game) => game.platforms.length > 0)
 
         return {
           ...current,
