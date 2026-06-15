@@ -44,6 +44,7 @@ interface AppStateContextValue {
   syncError: string | null
   saveConnection(connection: ProviderConnection): void
   replaceProviderGames(providerId: PlatformId, games: UserGame[]): void
+  upsertGame(game: UserGame): void
   updateGameStatus(gameId: string, status: GameStatus): void
   recordSwipe(gameId: string, choice: SwipeChoice): void
   updateSettings(settings: Partial<AppSettings>): void
@@ -222,6 +223,16 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     [commit],
   )
 
+  const upsertGame = useCallback(
+    (game: UserGame) => {
+      commit((current) => ({
+        ...current,
+        games: mergeGames(current.games, [game]),
+      }))
+    },
+    [commit],
+  )
+
   const recordSwipe = useCallback(
     (gameId: string, choice: SwipeChoice) => {
       commit((current, timestamp) => ({
@@ -291,6 +302,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       syncError,
       saveConnection,
       replaceProviderGames,
+      upsertGame,
       updateGameStatus,
       recordSwipe,
       updateSettings,
@@ -312,6 +324,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       syncError,
       syncNow,
       syncStatus,
+      upsertGame,
       updateGameStatus,
       updateSettings,
     ],

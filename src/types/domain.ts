@@ -87,6 +87,20 @@ export interface UserGame {
   guide?: GameGuideSummary
 }
 
+export interface DiscoveryGame {
+  id: string
+  title: string
+  normalizedTitle: string
+  genres: string[]
+  tags: string[]
+  platforms: PlatformId[]
+  trophyProfile?: {
+    difficulty?: string
+    estimatedHours?: string
+  }
+  notes?: string[]
+}
+
 export type SwipeChoice = 'ignore' | 'maybe' | 'want_to_play' | 'want_to_platinum'
 
 export interface SwipeDecision {
@@ -96,10 +110,18 @@ export interface SwipeDecision {
   createdAt: string
 }
 
+export type RecommendationSource = 'library' | 'discovery'
+
 export interface Recommendation {
-  game: UserGame
+  id: string
+  title: string
+  normalizedTitle: string
+  platforms: PlatformId[]
+  source: RecommendationSource
   score: number
   reasons: string[]
+  game?: UserGame
+  discoveryGame?: DiscoveryGame
 }
 
 export interface TrophyChecklistItem {
@@ -138,6 +160,7 @@ export interface GamerProfile {
 export interface AppSettings {
   theme: ThemePreference
   trophyGuideApiBaseUrl: string
+  discoveryApiBaseUrl: string
   updatedAt: string
 }
 

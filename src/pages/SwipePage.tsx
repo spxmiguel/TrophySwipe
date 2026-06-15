@@ -7,9 +7,10 @@ import { PlatformBadge } from '../components/PlatformBadge'
 import { useAppState } from '../hooks/useAppState'
 import { buildRecommendations } from '../services/recommendations'
 import type { SwipeChoice } from '../types/domain'
+import { createGameFromDiscovery } from '../utils/normalize'
 
 export function SwipePage() {
-  const { state, recordSwipe } = useAppState()
+  const { state, recordSwipe, upsertGame } = useAppState()
   const [index, setIndex] = useState(0)
   const recommendations = useMemo(
     () => buildRecommendations(state.games, state.swipeDecisions),
@@ -19,7 +20,19 @@ export function SwipePage() {
 
   function choose(choice: SwipeChoice) {
     if (!current) return
-    recordSwipe(current.game.id, choice)
+    if (
+      current.source === 'discovery' &&
+      current.discoveryGame &&
+      (choice === 'want_to_play' || choice === 'want_to_platinum')
+    ) {
+      upsertGame(
+        createGameFromDiscovery(
+          current.discoveryGame,
+          choice === 'want_to_play' ? 'want_to_play' : 'want_to_platinum',
+        ),
+      )
+    }
+    recordSwipe(current.id, choice)
     setIndex((value) => value + 1)
   }
 
@@ -27,14 +40,14 @@ export function SwipePage() {
     <>
       <PageHeader
         eyebrow="Recomendacoes / Swipe"
-        title="Cards priorizados por dados reais"
-        description="O swipe usa sua biblioteca e metadados importados. Promocoes, similaridade e dificuldade entram quando uma fonte real estiver configurada."
+        title="Primeiro sua biblioteca. Depois jogos novos do seu gosto."
+        description="O swipe prioriza jogos que voce ja tem. Quando a biblioteca acaba, ele recomenda jogos novos por padroes dos seus zerados, platinados, jogados e escolhas anteriores."
       />
 
       {!current ? (
         <EmptyState
           title="Sem recomendacoes por enquanto"
-          description="Importe sua biblioteca primeiro. Se houver jogos, as recomendacoes aparecem quando o app tiver sinais reais como posse, assinatura, tempo jogado ou guia configurado."
+          description="Importe ou marque alguns jogos como jogado, zerado, platinado, quero jogar ou quero platinar. Assim o algoritmo aprende seu gosto antes de puxar recomendacoes gerais."
           actionLabel="Ver biblioteca"
           actionTo="/biblioteca"
         />
@@ -49,17 +62,20 @@ export function SwipePage() {
                   <Sparkles className="size-4" />
                   Score {current.score}
                 </span>
+                <span className="rounded-full border border-slate-300 bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700 dark:border-white/15 dark:bg-white/[0.08] dark:text-slate-200">
+                  {current.source === 'library' ? 'Sua biblioteca' : 'Jogo novo'}
+                </span>
                 <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
                   {index + 1} / {recommendations.length}
                 </span>
               </div>
 
               <h2 className="mt-10 text-3xl font-black tracking-normal text-slate-950 dark:text-white">
-                {current.game.title}
+                {current.title}
               </h2>
               <div className="mt-4 flex flex-wrap gap-2">
-                {current.game.platforms.map((platform) => (
-                  <PlatformBadge key={platform.platform} platform={platform.platform} />
+                {current.platforms.map((platform) => (
+                  <PlatformBadge key={platform} platform={platform} />
                 ))}
               </div>
 

@@ -20,6 +20,7 @@ TrophySwipe e um app React para recomendar jogos para jogar e platinar usando da
 - Conexao simples por nome/ID da conta, com configuracao avancada de API/bridge recolhida.
 - Biblioteca unificada com deteccao de duplicados por titulo normalizado.
 - Swipe com decisoes: ignorar, talvez, quero jogar e quero platinar.
+- Recomendacoes em dois estagios: primeiro jogos da biblioteca; depois jogos novos por gosto.
 - Modo Platina com provider separado de guias.
 - Configuracoes para sync, export/import JSON, limpar local, apagar nuvem e tema.
 
@@ -134,6 +135,18 @@ Formato aceito pelo bridge:
 ```
 
 Sem bridge/API configurado, o app mostra erro claro e nao cria jogos ficticios.
+
+## Algoritmo de recomendacao
+
+O TrophySwipe usa uma ordem proposital:
+
+1. Recomenda primeiro jogos que o usuario ja possui/importou.
+2. Quando a biblioteca ja foi vista no swipe, passa para jogos novos.
+3. Jogos novos sao filtrados por gosto: zerados, platinados, jogados, abandonados e decisoes anteriores de swipe.
+4. Tags e generos sao enriquecidos por um catalogo inicial de jogos reais em `src/data/discoveryCatalog.ts`.
+5. Quando o usuario marca um jogo novo como `Quero jogar` ou `Quero platinar`, ele entra na biblioteca como intencao, sem ser marcado como possuido.
+
+O catalogo de descoberta nao representa biblioteca do usuario e nao cria progresso falso. Ele existe para o app conseguir sugerir jogos reais fora da biblioteca enquanto providers externos de catalogo ainda nao foram conectados.
 
 ### Guias de platina
 

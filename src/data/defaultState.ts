@@ -29,6 +29,7 @@ export function createDefaultState(): AppState {
     settings: {
       theme: 'dark',
       trophyGuideApiBaseUrl: '',
+      discoveryApiBaseUrl: '',
       updatedAt: timestamp,
     },
     updatedAt: timestamp,

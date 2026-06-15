@@ -1,4 +1,10 @@
-import type { PlatformId, PlatformOwnership, UserGame } from '../types/domain'
+import type {
+  DiscoveryGame,
+  GameStatus,
+  PlatformId,
+  PlatformOwnership,
+  UserGame,
+} from '../types/domain'
 import { nowIso } from './date'
 
 export function normalizeTitle(title: string) {
@@ -62,5 +68,34 @@ export function createGameFromProvider(input: {
     importedFrom: input.platform,
     importedAt: timestamp,
     updatedAt: timestamp,
+  }
+}
+
+export function createGameFromDiscovery(game: DiscoveryGame, status: GameStatus): UserGame {
+  const timestamp = nowIso()
+
+  return {
+    id: game.id,
+    title: game.title,
+    normalizedTitle: game.normalizedTitle,
+    status,
+    genres: game.genres,
+    tags: game.tags,
+    platforms: game.platforms.map((platform) => ({
+      platform,
+      owned: false,
+    })),
+    importedFrom: game.platforms[0] ?? 'steam',
+    importedAt: timestamp,
+    updatedAt: timestamp,
+    guide: game.trophyProfile
+      ? {
+          status: 'requires_configuration',
+          difficulty: game.trophyProfile.difficulty,
+          estimatedHours: game.trophyProfile.estimatedHours,
+          reason:
+            'Perfil de platina estimado pelo catalogo real inicial. Configure uma fonte de guias para checklist detalhado.',
+        }
+      : undefined,
   }
 }
