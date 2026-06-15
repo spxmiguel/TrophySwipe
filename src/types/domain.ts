@@ -61,12 +61,25 @@ export interface GameGuideSummary {
   sourceUrl?: string
 }
 
+export interface GamePromotion {
+  source: string
+  label?: string
+  currentPrice?: string
+  originalPrice?: string
+  discountPercent?: number
+  url?: string
+  checkedAt: string
+}
+
 export interface UserGame {
   id: string
   title: string
   normalizedTitle: string
   status: GameStatus
   platforms: PlatformOwnership[]
+  genres?: string[]
+  tags?: string[]
+  promotion?: GamePromotion
   importedFrom: PlatformId
   importedAt: string
   updatedAt: string

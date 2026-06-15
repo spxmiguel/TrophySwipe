@@ -47,6 +47,9 @@ export function mergeGames(existing: UserGame[], incoming: UserGame[]) {
       title: previous.title || game.title,
       normalizedTitle: key,
       platforms: mergePlatformOwnership(previous.platforms, game.platforms),
+      genres: Array.from(new Set([...(previous.genres ?? []), ...(game.genres ?? [])])),
+      tags: Array.from(new Set([...(previous.tags ?? []), ...(game.tags ?? [])])),
+      promotion: mostRecent.promotion ?? previous.promotion ?? game.promotion,
       importedAt: previous.importedAt < game.importedAt ? previous.importedAt : game.importedAt,
       updatedAt: mostRecent.updatedAt,
     })

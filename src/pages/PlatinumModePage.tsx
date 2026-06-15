@@ -158,6 +158,47 @@ export function PlatinumModePage() {
                     <GuideList title="Dicas" items={guide.tips ?? []} />
 
                     <div>
+                      <h3 className="text-lg font-bold text-slate-950 dark:text-white">
+                        Checklist de trofeus/conquistas
+                      </h3>
+                      {(guide.checklist ?? []).length === 0 ? (
+                        <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
+                          Nao informado pela fonte.
+                        </p>
+                      ) : (
+                        <div className="mt-3 grid gap-2">
+                          {(guide.checklist ?? []).map((item) => (
+                            <div
+                              key={item.id}
+                              className="rounded-lg border border-slate-200 bg-slate-50 p-3 dark:border-white/10 dark:bg-white/[0.04]"
+                            >
+                              <div className="flex flex-wrap items-center gap-2">
+                                <span className="font-semibold text-slate-950 dark:text-white">
+                                  {item.title}
+                                </span>
+                                {item.missable ? (
+                                  <span className="rounded-full border border-amber-400/40 bg-amber-400/10 px-2 py-0.5 text-xs font-semibold text-amber-800 dark:text-amber-100">
+                                    Perdivel
+                                  </span>
+                                ) : null}
+                                {item.online ? (
+                                  <span className="rounded-full border border-blue-400/40 bg-blue-400/10 px-2 py-0.5 text-xs font-semibold text-blue-800 dark:text-blue-100">
+                                    Online
+                                  </span>
+                                ) : null}
+                              </div>
+                              {item.description ? (
+                                <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
+                                  {item.description}
+                                </p>
+                              ) : null}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    <div>
                       <h3 className="text-lg font-bold text-slate-950 dark:text-white">Links reais</h3>
                       {guide.links.length === 0 ? (
                         <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">

@@ -12,6 +12,17 @@ interface BridgeGame {
   completionPercent?: number
   subscriptionSource?: 'ps_plus' | 'game_pass' | 'nintendo_switch_online' | 'epic_free' | 'other'
   lastPlayedAt?: string
+  genres?: string[]
+  tags?: string[]
+  promotion?: {
+    source: string
+    label?: string
+    currentPrice?: string
+    originalPrice?: string
+    discountPercent?: number
+    url?: string
+    checkedAt?: string
+  }
 }
 
 interface BridgeResponse {
@@ -75,6 +86,14 @@ export async function importFromBridge(
         completionPercent: item.completionPercent,
         subscriptionSource: item.subscriptionSource,
         lastPlayedAt: item.lastPlayedAt,
+        genres: item.genres,
+        tags: item.tags,
+        promotion: item.promotion
+          ? {
+              ...item.promotion,
+              checkedAt: item.promotion.checkedAt ?? new Date().toISOString(),
+            }
+          : undefined,
       })
     })
     .filter((game): game is NonNullable<typeof game> => Boolean(game))

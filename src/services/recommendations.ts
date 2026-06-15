@@ -5,6 +5,12 @@ function alreadyDecided(gameId: string, decisions: SwipeDecision[]) {
 }
 
 export function buildRecommendations(games: UserGame[], decisions: SwipeDecision[]): Recommendation[] {
+  const playedSignals = new Set(
+    games
+      .filter((game) => game.status === 'played' || game.status === 'finished' || game.status === 'platinum')
+      .flatMap((game) => [...(game.genres ?? []), ...(game.tags ?? [])].map((value) => value.toLowerCase())),
+  )
+
   return games
     .filter((game) => !alreadyDecided(game.id, decisions))
     .map((game) => {
@@ -26,9 +32,28 @@ export function buildRecommendations(games: UserGame[], decisions: SwipeDecision
         reasons.push('Disponivel no Game Pass')
       }
 
+      const sharedSignals = [...(game.genres ?? []), ...(game.tags ?? [])].filter((value) =>
+        playedSignals.has(value.toLowerCase()),
+      )
+
+      if (sharedSignals.length > 0) {
+        score += 14
+        reasons.push(`Parecido com jogos do seu historico: ${sharedSignals.slice(0, 3).join(', ')}`)
+      }
+
       if (game.guide?.difficulty?.toLowerCase().includes('facil')) {
         score += 12
         reasons.push('Platina marcada como facil pela fonte configurada')
+      }
+
+      if (game.guide?.estimatedHours && /\b([1-9]|1[0-9]|20)\b/.test(game.guide.estimatedHours)) {
+        score += 10
+        reasons.push('Platina rapida pela fonte configurada')
+      }
+
+      if (game.promotion) {
+        score += 8
+        reasons.push(game.promotion.label || 'Promocao detectada por fonte configurada')
       }
 
       const playedMinutes = game.platforms.reduce(

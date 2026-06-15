@@ -109,7 +109,15 @@ Formato aceito pelo bridge:
       "playtimeMinutes": 120,
       "achievementsEarned": 4,
       "achievementsTotal": 40,
-      "subscriptionSource": "game_pass"
+      "subscriptionSource": "game_pass",
+      "genres": ["acao"],
+      "tags": ["soulslike"],
+      "promotion": {
+        "source": "store-api",
+        "label": "Promocao detectada por fonte real",
+        "discountPercent": 40,
+        "url": "https://..."
+      }
     }
   ]
 }
@@ -120,6 +128,8 @@ Sem bridge/API configurado, o app mostra erro claro e nao cria jogos ficticios.
 ### Guias de platina
 
 `src/providers/trophyGuideProvider.ts` aceita uma API configurada em Configuracoes. Fontes futuras podem incluir PSNProfiles, PowerPyx, TrueAchievements, Steam Guides e HowLongToBeat, desde que usadas por meios permitidos. O app nao faz scraping ilegal. Sem fonte configurada, mostra "guia indisponivel" com o motivo.
+
+A API de guias pode retornar dificuldade, tempo estimado, trofeus perdiveis, trofeus online, multiplas runs, roadmap, dicas, checklist e links reais.
 
 ## GitHub Pages
 

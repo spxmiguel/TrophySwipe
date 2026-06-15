@@ -9,6 +9,14 @@ interface GuideApiResponse {
   multipleRuns?: boolean
   roadmap?: string[]
   tips?: string[]
+  checklist?: Array<{
+    id?: string
+    title: string
+    description?: string
+    missable?: boolean
+    online?: boolean
+    completed?: boolean
+  }>
   links?: Array<{ label: string; url: string }>
 }
 
@@ -52,7 +60,14 @@ export async function getTrophyGuide(game: UserGame, guideApiBaseUrl?: string): 
       multipleRuns: payload.multipleRuns,
       roadmap: payload.roadmap ?? [],
       tips: payload.tips ?? [],
-      checklist: [],
+      checklist: (payload.checklist ?? []).map((item, index) => ({
+        id: item.id ?? `${game.id}-guide-${index}`,
+        title: item.title,
+        description: item.description,
+        missable: item.missable,
+        online: item.online,
+        completed: item.completed,
+      })),
       links: payload.links ?? [],
       updatedAt: nowIso(),
     }

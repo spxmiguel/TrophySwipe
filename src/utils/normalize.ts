@@ -24,6 +24,9 @@ export function createGameFromProvider(input: {
   completionPercent?: number
   subscriptionSource?: PlatformOwnership['subscriptionSource']
   lastPlayedAt?: string
+  genres?: string[]
+  tags?: string[]
+  promotion?: UserGame['promotion']
 }): UserGame {
   const timestamp = nowIso()
   const normalizedTitle = normalizeTitle(input.title)
@@ -40,6 +43,9 @@ export function createGameFromProvider(input: {
     title: input.title.trim(),
     normalizedTitle,
     status: 'owned',
+    genres: input.genres,
+    tags: input.tags,
+    promotion: input.promotion,
     platforms: [
       {
         platform: input.platform,
