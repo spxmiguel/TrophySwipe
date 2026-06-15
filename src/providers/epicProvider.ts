@@ -8,15 +8,22 @@ export const epicProvider: ProviderAdapter = {
     'Integração preparada para biblioteca Epic por bridge próprio, mantendo o escopo original do projeto.',
   capabilities: ['Biblioteca', 'Jogos resgatados', 'Progresso quando disponível'],
   setupNotes: [
-    'A UI principal destaca Steam, Xbox, PSN e Switch, mas Epic permanece preparada como provider opcional.',
-    'Use bridge autorizado; não faça scraping de conta ou loja.',
+    'Voce pode salvar apenas o nome da conta primeiro; Epic permanece como provider opcional preparado.',
+    'Use bridge autorizado; nao faça scraping de conta ou loja.',
   ],
   fields: [
+    {
+      key: 'accountName',
+      label: 'Nome da conta Epic',
+      type: 'text',
+      required: true,
+      placeholder: 'Seu usuario Epic',
+    },
     {
       key: 'bridgeBaseUrl',
       label: 'Bridge/API Epic',
       type: 'url',
-      required: true,
+      advanced: true,
       placeholder: 'https://sua-api.example.com/epic',
     },
     {
@@ -24,6 +31,7 @@ export const epicProvider: ProviderAdapter = {
       label: 'Token do bridge',
       type: 'password',
       secret: true,
+      advanced: true,
       placeholder: 'Bearer token opcional',
     },
   ],

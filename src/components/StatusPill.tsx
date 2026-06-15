@@ -3,8 +3,8 @@ import { cn } from '../utils/cn'
 
 const labels: Record<ConnectionStatus | GameStatus | SyncStatus, string> = {
   not_configured: 'Nao configurado',
-  configured: 'Configurado',
-  connected: 'Conectado',
+  configured: 'Conta salva',
+  connected: 'Biblioteca importada',
   syncing: 'Sincronizando',
   error: 'Erro',
   owned: 'Possui',

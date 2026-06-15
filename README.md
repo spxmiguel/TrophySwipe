@@ -17,6 +17,7 @@ TrophySwipe e um app React para recomendar jogos para jogar e platinar usando da
 - Login com Google ou modo local sem conta.
 - Dashboard com perfil, contas conectadas, jogos importados, recomendacoes e progresso de platina.
 - Providers separados para Steam, Xbox, PSN, Switch e Epic.
+- Conexao simples por nome/ID da conta, com configuracao avancada de API/bridge recolhida.
 - Biblioteca unificada com deteccao de duplicados por titulo normalizado.
 - Swipe com decisoes: ignorar, talvez, quero jogar e quero platinar.
 - Modo Platina com provider separado de guias.
@@ -84,11 +85,20 @@ Se o usuario estiver offline, as alteracoes continuam locais. Ao voltar online o
 
 ## Providers reais
 
+O fluxo principal foi desenhado para ser leve:
+
+1. O usuario clica em `Fazer login com Google` para ativar sync.
+2. Em `Conectar Contas`, informa somente o nome/ID da conta da plataforma quando isso for suficiente para identificar o perfil.
+3. A importacao de biblioteca real fica em `Configuracao avancada`, usando API/OAuth/bridge autorizado quando disponivel.
+
+Salvar o nome da conta nao cria jogos ficticios. Ele apenas conecta o identificador ao perfil do TrophySwipe e deixa a plataforma pronta para importacao real.
+
 ### Steam
 
 `src/providers/steamProvider.ts` suporta:
 
-- SteamID64.
+- Nome/URL/SteamID da conta para conexao rapida.
+- SteamID64 para importacao direta.
 - Steam Web API key para uso pessoal/teste.
 - Bridge/API propria para producao, sem expor segredo no cliente.
 
@@ -96,7 +106,7 @@ Observacao: chamadas diretas para Steam podem falhar por CORS em navegadores. Pa
 
 ### Xbox, PSN e Switch
 
-`xboxProvider`, `psnProvider` e `switchProvider` usam `bridgeBaseUrl` e token opcional. Eles esperam um endpoint autenticado que retorne biblioteca real do usuario.
+`xboxProvider`, `psnProvider` e `switchProvider` aceitam gamertag, PSN ID, nome da conta ou friend code para conexao rapida. Para importar biblioteca real, usam `bridgeBaseUrl` e token opcional em configuracao avancada. Eles esperam um endpoint autenticado que retorne biblioteca real do usuario.
 
 Formato aceito pelo bridge:
 

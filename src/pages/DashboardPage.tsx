@@ -12,7 +12,7 @@ import { formatDateTime } from '../utils/date'
 export function DashboardPage() {
   const { state, online, syncStatus } = useAppState()
   const connected = primaryPlatforms.filter(
-    (platform) => state.connections[platform].status === 'connected',
+    (platform) => state.connections[platform].status !== 'not_configured',
   )
   const recommendations = buildRecommendations(state.games, state.swipeDecisions)
   const platinumCount = state.games.filter(
@@ -32,7 +32,7 @@ export function DashboardPage() {
           icon={<Unplug className="size-5" />}
           label="Contas conectadas"
           value={connected.length}
-          detail="Steam, Xbox, PSN e Switch aparecem quando o provider importa com sucesso."
+          detail="Steam, Xbox, PSN e Switch contam quando voce salva a conta ou importa a biblioteca."
         />
         <StatCard
           icon={<Library className="size-5" />}

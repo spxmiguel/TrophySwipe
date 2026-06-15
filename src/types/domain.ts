@@ -28,6 +28,7 @@ export interface ProviderField {
   type: ProviderFieldType
   required?: boolean
   secret?: boolean
+  advanced?: boolean
   placeholder?: string
   helpText?: string
 }

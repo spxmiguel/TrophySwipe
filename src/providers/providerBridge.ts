@@ -46,6 +46,7 @@ export async function importFromBridge(
 ): Promise<ProviderImportResult> {
   const bridgeBaseUrl = stringValue(values, 'bridgeBaseUrl')
   const accessToken = stringValue(values, 'accessToken')
+  const accountName = stringValue(values, 'accountName')
 
   if (!bridgeBaseUrl) {
     throw new ProviderConfigurationError(
@@ -55,6 +56,7 @@ export async function importFromBridge(
 
   const url = new URL('/library', bridgeBaseUrl.endsWith('/') ? bridgeBaseUrl : `${bridgeBaseUrl}/`)
   url.searchParams.set('platform', platform)
+  if (accountName) url.searchParams.set('accountName', accountName)
 
   const response = await fetch(url.toString(), {
     headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
